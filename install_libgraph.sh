@@ -18,6 +18,14 @@ tar -xzvf libgraph-1.0.2.tar.gz
 # Change to the libgraph directory
 cd libgraph-1.0.2
 
+# Patch the source code to fix compilation errors
+# Add the declarations for missing functions at the beginning of text.c
+sed -i '1s/^/#include <stdio.h>\\nvoid refresh_interrupt(int);\\nvoid delay(int);\\n/' text.c
+
+# Fix type casting issues in text.c
+sed -i 's/vsscanf(&template,/vsscanf((const char *)&template,/' text.c
+sed -i 's/vsscanf(&input,/vsscanf((const char *)&input,/' text.c
+
 # Configure and install libgraph
 CPPFLAGS="$CPPFLAGS $(pkg-config --cflags-only-I guile-2.2) -fcommon" \
 CFLAGS="$CFLAGS $(pkg-config --cflags-only-other guile-2.2) -fcommon" \
