@@ -19,7 +19,10 @@ tar -xzvf libgraph-1.0.2.tar.gz
 cd libgraph-1.0.2
 
 # Patch the source code to fix compilation errors
-sed -i '1s/^/#include <stdio.h>\\nvoid refresh_interrupt(int);\\nvoid delay(int);\\n/' text.c
+# Add missing function declarations
+sed -i '1i #include <stdio.h>\nvoid refresh_interrupt(int);\nvoid delay(int);\n' text.c
+
+# Correct argument types for vsscanf
 sed -i 's/vsscanf(&template,/vsscanf((const char *)&template,/' text.c
 sed -i 's/vsscanf(&input,/vsscanf((const char *)&input,/' text.c
 
