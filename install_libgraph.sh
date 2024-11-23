@@ -19,10 +19,7 @@ tar -xzvf libgraph-1.0.2.tar.gz
 cd libgraph-1.0.2
 
 # Patch the source code to fix compilation errors
-# Add the declarations for missing functions at the beginning of text.c
 sed -i '1s/^/#include <stdio.h>\\nvoid refresh_interrupt(int);\\nvoid delay(int);\\n/' text.c
-
-# Fix type casting issues in text.c
 sed -i 's/vsscanf(&template,/vsscanf((const char *)&template,/' text.c
 sed -i 's/vsscanf(&input,/vsscanf((const char *)&input,/' text.c
 
@@ -32,7 +29,13 @@ CFLAGS="$CFLAGS $(pkg-config --cflags-only-other guile-2.2) -fcommon" \
 LDFLAGS="$LDFLAGS $(pkg-config --libs guile-2.2)" \
 ./configure
 
-make && sudo make install
+# Run make and make install separately
+make
+sudo make install
 
-# Copy the libgraph libraries to /usr/lib
-sudo cp /usr/local/lib/libgraph.* /usr/lib
+# Verify if libraries exist before copying
+if ls /usr/local/lib/libgraph.* 1> /dev/null 2>&1; then
+    sudo cp /usr/local/lib/libgraph.* /usr/lib
+else
+    echo "Libraries not found in /usr/local/lib. Make sure 'make install' was successful."
+fi
