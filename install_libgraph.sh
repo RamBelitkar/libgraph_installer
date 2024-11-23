@@ -12,7 +12,7 @@ sudo apt-get update && sudo apt-get upgrade -y
 
 # Install required dependencies
 echo "Installing dependencies..."
-sudo apt-get install -y build-essential libsdl-image1.2 libsdl-image1.2-dev guile-2.2 guile-2.2-dev wget
+sudo apt-get install -y build-essential libsdl-image1.2 libsdl-image1.2-dev guile-2.2 guile-2.2-dev wget git
 
 # Download libgraph source
 echo "Downloading libgraph source..."
@@ -58,9 +58,21 @@ else
   exit 1
 fi
 
+# Go back to the parent directory
+cd ..
+
+# Clone conio.h repository
+echo "Cloning conio.h repository..."
+git clone https://github.com/zoelabbb/conio.h.git
+cd conio.h
+
+# Install conio.h
+echo "Installing conio.h..."
+sudo make install
+
 # Cleanup
 echo "Cleaning up..."
 cd ..
-rm -rf libgraph-1.0.2 libgraph-1.0.2.tar.gz
+rm -rf libgraph-1.0.2 libgraph-1.0.2.tar.gz conio.h
 
-echo "libgraph installation completed successfully!"
+echo "Installation completed successfully!"
